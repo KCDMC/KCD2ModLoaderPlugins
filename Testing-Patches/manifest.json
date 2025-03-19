@@ -1,0 +1,9 @@
+{
+    "name": "Patches",
+    "version_number": "1.0.0",
+    "website_url": "",
+    "description": "run some memory patches",
+    "dependencies": [
+
+    ]
+}

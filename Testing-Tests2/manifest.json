@@ -1,0 +1,10 @@
+{
+    "name": "Tests2",
+    "version_number": "1.0.0",
+    "website_url": "",
+    "description": "run some tests",
+    "dependencies": [
+		"LuaENVY-ENVY-1.2.0",
+		"Testing-XML-1.0.0"
+    ]
+}

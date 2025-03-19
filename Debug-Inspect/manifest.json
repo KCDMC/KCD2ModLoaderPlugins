@@ -1,0 +1,10 @@
+{
+  "name": "Inspect",
+  "description": "",
+  "version_number": "0.0.0",
+  "dependencies": [
+    "LuaENVY-ENVY-1.2.0",
+	"Testing-ModUtil-1.0.0"
+  ],
+  "website_url": ""
+}

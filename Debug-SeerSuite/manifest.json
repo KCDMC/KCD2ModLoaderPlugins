@@ -1,0 +1,9 @@
+{
+  "name": "SeerSuite",
+  "description": "Defines debug tools such as an Object Browser and Script Console.",
+  "version_number": "1.0.3",
+  "dependencies": [
+    "LuaENVY-ENVY-1.2.0"
+  ],
+  "website_url": ""
+}

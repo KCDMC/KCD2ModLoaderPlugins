@@ -1,0 +1,9 @@
+{
+  "name": "ModUtil",
+  "description": "Utility mod for mod interactions within lua ...",
+  "version_number": "4.0.0",
+  "dependencies": [
+    "LuaENVY-ENVY-1.2.0"
+  ],
+  "website_url": "https://github.com/SGG-Modding/ModUtil"
+}

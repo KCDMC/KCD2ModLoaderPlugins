@@ -1,0 +1,9 @@
+{
+  "namespace": "LuaENVY",
+  "name": "ENVY",
+  "description": "A plugin to allow ReturnOfModding plugins greater control of their environment.",
+  "version_number": "1.2.0",
+  "dependencies": [],
+  "website_url": "https://github.com/LuaENVY/ENVY",
+  "FullName": "LuaENVY-ENVY"
+}

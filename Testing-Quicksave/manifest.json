@@ -1,0 +1,9 @@
+{
+    "name": "Quicksave",
+    "version_number": "1.0.0",
+    "website_url": "",
+    "description": "quicksave with F5.",
+    "dependencies": [
+		"LuaENVY-ENVY-1.2.0"
+    ]
+}

@@ -1,0 +1,9 @@
+{
+    "name": "Tracing",
+    "version_number": "1.0.0",
+    "website_url": "",
+    "description": "trace lua calls",
+    "dependencies": [
+		"LuaENVY-ENVY-1.2.0"
+    ]
+}

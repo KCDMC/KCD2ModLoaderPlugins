@@ -53,16 +53,22 @@ end
 local printer = print
 
 local scriptbind_classes = {}
+local scriptbind_names = {}
 local scriptbind_instance_hook = nop
-local function scriptbind_class_name(name)
-	return name
+do 
+	local unknown_meta_prefix = "Unknown Metatable "
+	local function scriptbind_class_name(name)
+		name = gsub(gsub(gsub(name,unknown_meta_prefix,'unknown_'),' ','_'),'::','__')
+		return name
+	end
+	local function scriptbind_instance(class_name, instance, class)
+		name = scriptbind_class_name(class_name)
+		scriptbind_classes[name] = class
+		scriptbind_names[class] = name
+		scriptbind_instance_hook(name, instance, class)
+	end
+	rom.cryengine.on_lua_userdata_bind(scriptbind_instance)
 end
-local function scriptbind_instance(class_name, instance, class)
-	name = scriptbind_class_name(class_name)
-	scriptbind_classes[name] = class
-	scriptbind_instance_hook(name, instance, class)
-end
-rom.cryengine.on_lua_userdata_bind(scriptbind_instance)
 
 do -- trace_calls_rate
 	local tracer_name = 'trace_calls_rate'
@@ -88,8 +94,6 @@ do -- trace_calls_rate
 	local names
 	local global_names
 	
-	local unknown_meta_prefix = "Unknown Metatable "
-	
 	local data_path = _PLUGIN.plugins_data_mod_folder_path
 	rom.path.create_directory(data_path)
 	
@@ -108,12 +112,7 @@ do -- trace_calls_rate
 			return name
 		end
 		
-		for k,v in pairs(scriptbind_classes) do
-			if v == ref then
-				name = gsub(gsub(gsub(k,unknown_meta_prefix,'unknown_'),' ','_'),'::','__')
-				break
-			end
-		end
+		name = scriptbind_names[ref]
 		
 		if name == nil then
 			local refstr = tostring(ref)
@@ -312,8 +311,6 @@ do -- trace_calls_count
 	local names
 	local global_names
 	
-	local unknown_meta_prefix = "Unknown Metatable "
-	
 	local data_path = _PLUGIN.plugins_data_mod_folder_path
 	rom.path.create_directory(data_path)
 	
@@ -332,12 +329,7 @@ do -- trace_calls_count
 			return name
 		end
 		
-		for k,v in pairs(scriptbind_classes) do
-			if v == ref then
-				name = gsub(gsub(gsub(k,unknown_meta_prefix,'unknown_'),' ','_'),'::','__')
-				break
-			end
-		end
+		name = scriptbind_names[ref]
 		
 		if name == nil then
 			local refstr = tostring(ref)
@@ -527,8 +519,6 @@ do -- trace_calls_once
 	local names
 	local global_names
 	
-	local unknown_meta_prefix = "Unknown Metatable "
-	
 	local data_path = _PLUGIN.plugins_data_mod_folder_path
 	rom.path.create_directory(data_path)
 	
@@ -547,12 +537,7 @@ do -- trace_calls_once
 			return name
 		end
 		
-		for k,v in pairs(scriptbind_classes) do
-			if v == ref then
-				name = gsub(gsub(gsub(k,unknown_meta_prefix,'unknown_'),' ','_'),'::','__')
-				break
-			end
-		end
+		name = scriptbind_names[ref]
 		
 		if name == nil then
 			local refstr = tostring(ref)
@@ -739,8 +724,6 @@ do -- trace_calls
 	local names
 	local global_names
 	
-	local unknown_meta_prefix = "Unknown Metatable "
-	
 	local data_path = _PLUGIN.plugins_data_mod_folder_path
 	rom.path.create_directory(data_path)
 	
@@ -759,12 +742,7 @@ do -- trace_calls
 			return name
 		end
 		
-		for k,v in pairs(scriptbind_classes) do
-			if v == ref then
-				name = gsub(gsub(gsub(k,unknown_meta_prefix,'unknown_'),' ','_'),'::','__')
-				break
-			end
-		end
+		name = scriptbind_names[ref]
 		
 		if name == nil then
 			local refstr = tostring(ref)
@@ -947,8 +925,6 @@ do -- trace_metamethod_calls_once
 	local names
 	local global_names
 	
-	local unknown_meta_prefix = "Unknown Metatable "
-	
 	local data_path = _PLUGIN.plugins_data_mod_folder_path
 	rom.path.create_directory(data_path)
 	
@@ -967,12 +943,7 @@ do -- trace_metamethod_calls_once
 			return name
 		end
 		
-		for k,v in pairs(scriptbind_classes) do
-			if v == ref then
-				name = gsub(gsub(gsub(k,unknown_meta_prefix,'unknown_'),' ','_'),'::','__')
-				break
-			end
-		end
+		name = scriptbind_names[ref]
 		
 		if name == nil then
 			local refstr = tostring(ref)
@@ -1155,8 +1126,6 @@ do -- trace_metamethod_calls
 	local names
 	local global_names
 	
-	local unknown_meta_prefix = "Unknown Metatable "
-	
 	local data_path = _PLUGIN.plugins_data_mod_folder_path
 	rom.path.create_directory(data_path)
 	
@@ -1175,12 +1144,7 @@ do -- trace_metamethod_calls
 			return name
 		end
 		
-		for k,v in pairs(scriptbind_classes) do
-			if v == ref then
-				name = gsub(gsub(gsub(k,unknown_meta_prefix,'unknown_'),' ','_'),'::','__')
-				break
-			end
-		end
+		name = scriptbind_names[ref]
 		
 		if name == nil then
 			local refstr = tostring(ref)
@@ -1360,8 +1324,6 @@ do -- trace_metatables_graph
 	local names
 	local global_names
 	
-	local unknown_meta_prefix = "Unknown Metatable "
-	
 	local data_path = _PLUGIN.plugins_data_mod_folder_path
 	rom.path.create_directory(data_path)
 	
@@ -1380,12 +1342,7 @@ do -- trace_metatables_graph
 			return name
 		end
 		
-		for k,v in pairs(scriptbind_classes) do
-			if v == ref then
-				name = gsub(gsub(gsub(k,unknown_meta_prefix,'unknown_'),' ','_'),'::','__')
-				break
-			end
-		end
+		name = scriptbind_names[ref]
 		
 		if name == nil then
 			local refstr = tostring(ref)
@@ -1597,29 +1554,115 @@ do -- trace_metatables_graph
     end
 end
 
-do -- trace_UIAction
-	local tracer_name = 'trace_UIAction'
+do -- trace_UIAction_EventSystem
+	local tracer_name = 'trace_UIAction_EventSystem'
 	
-	local listener = { listen = function(self, ...)
-		printer(tracer_name, ...)
-	end }
+	local listen = function(self, actionName, eventName, argTable)
+		printer(tracer_name, actionName, eventName, unpack(argTable))
+	end
+	
+	local listener = { listen = listen }
 	
 	trace_enable[tracer_name] = function()
-		--rom.game.UIAction.RegisterElementListener( listener, "", -1, "", "listen" )
-		--rom.game.UIAction.RegisterActionListener( listener, "", "", "listen" )
 		rom.game.UIAction.RegisterEventSystemListener( listener, "", "", "listen" )
 	end
 	
 	trace_disable[tracer_name] = function()
-		--rom.game.UIAction.UnregisterElementListener( listener, "listen" )
-		--rom.game.UIAction.UnregisterActionListener( listener, "listen" )
 		rom.game.UIAction.UnregisterEventSystemListener( listener, "listen" )
 	end
 	
 end
 
-do -- trace_setter
-	local tracer_name = 'trace_setter'
+do -- trace_UIAction_Action
+	local tracer_name = 'trace_UIAction_Action'
+	
+	local actions = {
+		
+	}
+	
+	local listen = function(self, actionName, eventName, argTable)
+		printer(tracer_name, actionName, eventName, unpack(argTable))
+	end
+	
+	local listener = { }
+	
+	for _, action in ipairs(actions) do
+		listener[action] = listen
+	end
+	
+	trace_enable[tracer_name] = function()
+		for _, action in ipairs(actions) do
+			rom.game.UIAction.RegisterActionListener( listener, action, "", action )
+		end
+	end
+	
+	trace_disable[tracer_name] = function()
+		for _, action in ipairs(actions) do
+			rom.game.UIAction.UnregisterActionListener( listener, action )
+		end
+	end
+	
+end
+
+do -- trace_UIAction_Element
+	local tracer_name = 'trace_UIAction_Element'
+	
+	local elements = {
+		'AlchemyBook';
+		'ApseCharacter';
+		'ApseCodexList';
+		'ApseCraftingContent';
+		'ApseCraftingList';
+		'ApseInventoryInfo';
+		'ApseInventoryList';
+		'ApseMap';
+		'ApseMapLegendList';
+		'ApseModalDialog';
+		'ApsePlayerInfo';
+		'ApsePlayerList';
+		'ApseQuestLogDiary';
+		'ApseQuestLogList';
+		'GameOver';
+		'GeneralBook';
+		'HorseInspect';
+		'HUD';
+		'ItemSelection';
+		'ItemTransfer';
+		'LoadingScreen';
+		'LockPicking';
+		'Menu';
+		'Overlay';
+		'Pickpocketing';
+		'Progress';
+		'SkipTime';
+	}
+	
+	local listen = function(self, elementName, instanceId, eventName, argTable)
+		printer(tracer_name, elementName, instanceId, eventName, unpack(argTable))
+	end
+	
+	local listener = { }
+	
+	for _, element in ipairs(elements) do
+		listener[element] = listen
+	end
+	
+	trace_enable[tracer_name] = function()
+		for _, element in ipairs(elements) do
+			rom.game.UIAction.RegisterElementListener( listener, element, -1, "", element )
+		end
+	end
+	
+	trace_disable[tracer_name] = function()
+		for _, element in ipairs(elements) do
+			rom.game.UIAction.UnregisterElementListener( listener, element )
+		end
+	end
+	
+end
+
+do -- trace_global_setter
+	local tracer_name = 'trace_global_setter'
 
 	local __G
 	local meta
@@ -1714,3 +1757,6 @@ public.tracers = tracers
 public.enable_tracing = enable_tracing
 public.disable_tracing = disable_tracing
 public.toggle_tracing = toggle_tracing
+
+public.scriptbind_classes = scriptbind_classes
+public.scriptbind_names = scriptbind_names

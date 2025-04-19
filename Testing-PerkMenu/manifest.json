@@ -1,0 +1,9 @@
+{
+    "name": "PerkMenu",
+    "version_number": "1.0.0",
+    "website_url": "",
+    "description": "Select perks with a menu",
+    "dependencies": [
+		"LuaENVY-ENVY-1.2.0"
+    ]
+}

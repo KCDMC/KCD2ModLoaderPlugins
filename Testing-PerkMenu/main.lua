@@ -5,7 +5,11 @@ envy.auto()
 
 local default_enabled_fields = { "perk_id", "perk_name", "perk_ui_name", "visibility", "exclude_in_game_mode" }
 
-private.perk_fields = rawget(private,"perk_fields") or { "row", "perk_id", "perk_name", "perk_ui_name", "visibility", "exclude_in_game_mode", "autolearnable", "level", "skill_selector", "ui_priority", "perk_ui_lore_desc", "icon_id", "parent_id", "metaperk_id" }
+local perk_fields = { "row", "perk_id", "perk_name", "perk_ui_name", "visibility", "exclude_in_game_mode", "autolearnable", "level", "skill_selector", "ui_priority", "perk_ui_lore_desc", "icon_id", "parent_id", "metaperk_id" }
+
+local function has_perk(soul, perk)
+	return soul:HasPerk(perk_id, false)
+end
 
 local function load_perks(perk_fields)
 	if rom.game == nil then return end
@@ -22,13 +26,6 @@ local function load_perks(perk_fields)
 			entry[field] = tostring(value)
 		end
 		entry.row = tostring(row)
-		if rawget(private,"perk_fields") == nil then
-			local perk_fields = {}
-			for field in pairs(entry) do
-				table.insert(perk_fields,field)
-			end
-			private.perk_fields = perk_fields
-		end
 		database[row] = entry
 	end
 	return database
@@ -59,14 +56,15 @@ local function draw_menu()
 	
 	rom.ImGui.Text("Search by: (lua string pattern)")
 	for _, field in ipairs(perk_fields) do
-	
 		local active = enable_fields[field]
 		if active == nil then active = false end
 		active = rom.ImGui.Checkbox(field, active)
 		enable_fields[field] = active
 		rom.ImGui.SameLine()
 		local text = search_texts[field] or ""
+		rom.ImGui.PushStyleColor(rom.ImGuiCol.FrameBg,0,0,0,0)
 		text = rom.ImGui.InputText("##" .. field, text, 128)
+		rom.ImGui.PopStyleColor()
 		search_texts[field] = text
 	end
 	
@@ -86,27 +84,20 @@ local function draw_menu()
 		rom.ImGui.Text("Found Perks:")
 		
 		for row, perk in ipairs(perks) do
-			local pass = false
+			local pass = true
 			for _, field in ipairs(perk_fields) do
-				if enable_fields[field] then
-					local data = perk[field]
-					local text = search_texts[field] or ""
-					if data ~= "" and data ~= nil then
-						pass = true
-						if #text > 0 then
-							if not string.find(perk[field], text) then
-								pass = false
-								break
-							end
-						end
-					elseif text ~= "" then
+				local text = search_texts[field]
+				if #text > 0 then
+					local status, result = pcall(string.find, perk[field], text)
+					if not status or not result then
 						pass = false
+						break
 					end
 				end
 			end
+			
 			if pass then
-				local perk_id = perk.perk_id
-				local active = soul:HasPerk(perk_id, false)
+				local active = has_perk(soul, perk)
 				local _, clicked = rom.ImGui.Checkbox("##" .. tostring(row), active or force_remove)
 				for _, field in ipairs(perk_fields) do
 					if enable_fields[field] then
@@ -120,9 +111,9 @@ local function draw_menu()
 				end
 				if clicked then
 					if active or force_remove then
-						soul:RemovePerk(perk_id)
+						soul:RemovePerk(perk.perk_id)
 					else
-						soul:AddPerk(perk_id)
+						soul:AddPerk(perk.perk_id)
 					end
 				end
 			end
